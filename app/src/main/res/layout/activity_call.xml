@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background">
+
+    <!-- Caller Photo -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardCallerPhoto"
+        android:layout_width="156dp"
+        android:layout_height="156dp"
+        android:layout_marginTop="100dp"
+        app:cardCornerRadius="78dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivCallerPhoto"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile" />
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Caller Name -->
+    <TextView
+        android:id="@+id/tvCallerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Kullanıcı Adı"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardCallerPhoto" />
+
+    <!-- Call Type -->
+    <LinearLayout
+        android:id="@+id/layoutCallType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCallerName">
+
+        <ImageView
+            android:id="@+id/ivCallTypeIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_call"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/tvCallType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Sesli Arama"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <!-- Call Status -->
+    <TextView
+        android:id="@+id/tvCallStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Aranıyor..."
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutCallType" />
+
+    <!-- Call Duration -->
+    <TextView
+        android:id="@+id/tvCallDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="00:00"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCallStatus" />
+
+    <!-- Incoming Call Actions -->
+    <LinearLayout
+        android:id="@+id/layoutIncomingActions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Decline Button -->
+        <ImageButton
+            android:id="@+id/btnDeclineCall"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="48dp"
+            android:background="@drawable/circle_bg_dark"
+            android:backgroundTint="#F44336"
+            android:contentDescription="Reddet"
+            android:padding="20dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/white" />
+
+        <!-- Accept Button -->
+        <ImageButton
+            android:id="@+id/btnAcceptCall"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="48dp"
+            android:background="@drawable/circle_bg_dark"
+            android:backgroundTint="#4CAF50"
+            android:contentDescription="Kabul Et"
+            android:padding="20dp"
+            android:src="@drawable/ic_call"
+            app:tint="@color/white" />
+
+    </LinearLayout>
+
+    <!-- Active Call Actions -->
+    <LinearLayout
+        android:id="@+id/layoutCallActions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="80dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Mute Button -->
+        <ImageButton
+            android:id="@+id/btnMute"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/circle_bg_dark"
+            android:backgroundTint="#80FFFFFF"
+            android:contentDescription="Sessiz"
+            android:padding="16dp"
+            android:src="@drawable/ic_mic"
+            app:tint="@color/white" />
+
+        <!-- End Call Button -->
+        <ImageButton
+            android:id="@+id/btnEndCall"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginHorizontal="24dp"
+            android:background="@drawable/circle_bg_dark"
+            android:backgroundTint="#F44336"
+            android:contentDescription="Aramayı Sonlandır"
+            android:padding="20dp"
+            android:src="@drawable/ic_close"
+            app:tint="@color/white" />
+
+        <!-- Speaker Button -->
+        <ImageButton
+            android:id="@+id/btnSpeaker"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/circle_bg_dark"
+            android:backgroundTint="#80FFFFFF"
+            android:contentDescription="Hoparlör"
+            android:padding="16dp"
+            android:src="@drawable/ic_volume_off"
+            app:tint="@color/white" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

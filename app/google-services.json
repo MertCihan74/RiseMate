@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "591598885953",
+    "project_id": "skillmatch-a878d",
+    "storage_bucket": "skillmatch-a878d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591598885953:android:5fb3ed1d1dc90d290c3ac0",
+        "android_client_info": {
+          "package_name": "com.parthenios.risemate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "591598885953-6n4m7gjrkosl2ov4p3bkm56r8tnvl52q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.parthenios.risemate",
+            "certificate_hash": "60401a81df034ad22dc6c842062a0b4f1b19e744"
+          }
+        },
+        {
+          "client_id": "591598885953-c5du3panp1raplvelccftab1cmgkijqa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSCeWylDxzZ2r1HrVMYleOr1WFz0xh1UU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "591598885953-c5du3panp1raplvelccftab1cmgkijqa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "591598885953-6s4fnlnfddcn3e03mbnb8r44t3iicddf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.parthenios.risemate"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591598885953:android:2ee3fe05dc4a05990c3ac0",
+        "android_client_info": {
+          "package_name": "com.parthenios.skillmatch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "591598885953-bag9mkoc3hprtbgj86fchd66qp63d6dl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.parthenios.skillmatch",
+            "certificate_hash": "60401a81df034ad22dc6c842062a0b4f1b19e744"
+          }
+        },
+        {
+          "client_id": "591598885953-c5du3panp1raplvelccftab1cmgkijqa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSCeWylDxzZ2r1HrVMYleOr1WFz0xh1UU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "591598885953-c5du3panp1raplvelccftab1cmgkijqa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "591598885953-6s4fnlnfddcn3e03mbnb8r44t3iicddf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.parthenios.risemate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,356 @@
+package com.parthenios.risemate.ui.settings
+
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.firestore.FirebaseFirestore
+import com.parthenios.risemate.R
+import com.parthenios.risemate.auth.AuthRepository
+import com.parthenios.risemate.databinding.ActivitySettingsBinding
+import com.parthenios.risemate.ui.auth.LoginActivity
+import com.parthenios.risemate.utils.LocaleHelper
+import com.parthenios.risemate.utils.UserPreferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+
+class SettingsActivity : AppCompatActivity() {
+    
+    private lateinit var binding: ActivitySettingsBinding
+    private lateinit var userPreferences: UserPreferences
+    private lateinit var authRepository: AuthRepository
+    private lateinit var firestore: FirebaseFirestore
+    
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.updateBaseContextLocale(newBase))
+    }
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        binding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        
+        userPreferences = UserPreferences(this)
+        authRepository = AuthRepository()
+        firestore = FirebaseFirestore.getInstance()
+        
+        setupToolbar()
+        setupGeneralSettings()
+        setupNotificationSettings()
+        setupPrivacySettings()
+        setupAccountSettings()
+        setupAboutSettings()
+    }
+    
+    private fun setupToolbar() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.apply {
+            title = getString(R.string.settings)
+            setDisplayHomeAsUpEnabled(true)
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // GENEL AYARLAR
+    // ═══════════════════════════════════════════════════════════════════
+    private fun setupGeneralSettings() {
+        // Mevcut dili göster
+        updateLanguageDisplay()
+        
+        // Dil seçimi
+        binding.cardLanguage.setOnClickListener {
+            showLanguageSelectionDialog()
+        }
+    }
+    
+    private fun updateLanguageDisplay() {
+        binding.tvCurrentLanguage.text = LocaleHelper.getLanguageDisplayName(this)
+    }
+    
+    private fun showLanguageSelectionDialog() {
+        val languages = LocaleHelper.getSupportedLanguages()
+        val currentLanguage = LocaleHelper.getLanguage(this)
+        
+        val languageNames = languages.map { it.second }.toTypedArray()
+        val languageCodes = languages.map { it.first }
+        
+        var selectedIndex = languageCodes.indexOf(currentLanguage)
+        if (selectedIndex < 0) selectedIndex = 0
+        
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.select_language))
+            .setSingleChoiceItems(languageNames, selectedIndex) { dialog, which ->
+                val selectedLanguage = languageCodes[which]
+                
+                if (selectedLanguage != currentLanguage) {
+                    // Dili değiştir
+                    LocaleHelper.setLanguage(this, selectedLanguage)
+                    
+                    // Kullanıcıya bilgi ver
+                    Toast.makeText(this, getString(R.string.language_changed), Toast.LENGTH_SHORT).show()
+                    
+                    // Activity'yi yeniden başlat
+                    dialog.dismiss()
+                    restartApp()
+                } else {
+                    dialog.dismiss()
+                }
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .show()
+    }
+    
+    private fun restartApp() {
+        // Uygulamayı yeniden başlat - MainActivity'ye yönlendir
+        val intent = packageManager.getLaunchIntentForPackage(packageName)
+        intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        if (intent != null) {
+            startActivity(intent)
+        }
+        finish()
+        // Geçiş animasyonunu kaldır
+        overridePendingTransition(0, 0)
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // BİLDİRİM AYARLARI
+    // ═══════════════════════════════════════════════════════════════════
+    private fun setupNotificationSettings() {
+        // Bildirimler açık/kapalı
+        binding.switchNotifications.isChecked = userPreferences.areNotificationsEnabled()
+        binding.switchNotifications.setOnCheckedChangeListener { _, isChecked ->
+            userPreferences.setNotificationsEnabled(isChecked)
+            binding.switchNotificationSound.isEnabled = isChecked
+            binding.switchNotificationVibration.isEnabled = isChecked
+        }
+        
+        // Bildirim sesi
+        binding.switchNotificationSound.isChecked = userPreferences.isNotificationSoundEnabled()
+        binding.switchNotificationSound.isEnabled = userPreferences.areNotificationsEnabled()
+        binding.switchNotificationSound.setOnCheckedChangeListener { _, isChecked ->
+            userPreferences.setNotificationSound(isChecked)
+        }
+        
+        // Bildirim titreşimi
+        binding.switchNotificationVibration.isChecked = userPreferences.isNotificationVibrationEnabled()
+        binding.switchNotificationVibration.isEnabled = userPreferences.areNotificationsEnabled()
+        binding.switchNotificationVibration.setOnCheckedChangeListener { _, isChecked ->
+            userPreferences.setNotificationVibration(isChecked)
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // GİZLİLİK AYARLARI
+    // ═══════════════════════════════════════════════════════════════════
+    private fun setupPrivacySettings() {
+        // Çevrimiçi durumunu gizle
+        binding.switchHideOnlineStatus.isChecked = userPreferences.isOnlineStatusHidden()
+        binding.switchHideOnlineStatus.setOnCheckedChangeListener { _, isChecked ->
+            userPreferences.setOnlineStatusHidden(isChecked)
+            updatePrivacySettingsOnServer()
+        }
+        
+        // Son görülmeyi gizle
+        binding.switchHideLastSeen.isChecked = userPreferences.isLastSeenHidden()
+        binding.switchHideLastSeen.setOnCheckedChangeListener { _, isChecked ->
+            userPreferences.setLastSeenHidden(isChecked)
+            updatePrivacySettingsOnServer()
+        }
+        
+        // Engellenenler listesi
+        binding.cardBlockedUsers.setOnClickListener {
+            startActivity(Intent(this, BlockedUsersActivity::class.java))
+        }
+        
+        // Engellenen sayısını göster
+        updateBlockedCount()
+    }
+    
+    private fun updateBlockedCount() {
+        val user = userPreferences.getUser()
+        val blockedCount = user?.blockedUsers?.size ?: 0
+        binding.tvBlockedCount.text = if (blockedCount > 0) {
+            "$blockedCount kişi engellendi"
+        } else {
+            "Engellenen kullanıcıları yönet"
+        }
+    }
+    
+    private fun updatePrivacySettingsOnServer() {
+        val currentUser = authRepository.getCurrentUser() ?: return
+        
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                firestore.collection("users")
+                    .document(currentUser.uid)
+                    .update(
+                        mapOf(
+                            "hideOnlineStatus" to userPreferences.isOnlineStatusHidden(),
+                            "hideLastSeen" to userPreferences.isLastSeenHidden()
+                        )
+                    )
+                    .await()
+            } catch (e: Exception) {
+                // Hata durumunda sessizce devam et
+            }
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // HESAP AYARLARI
+    // ═══════════════════════════════════════════════════════════════════
+    private fun setupAccountSettings() {
+        binding.cardDeleteAccount.setOnClickListener {
+            showDeleteAccountDialog()
+        }
+    }
+    
+    private fun showDeleteAccountDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("⚠️ Hesabı Sil")
+            .setMessage("Hesabınızı silmek istediğinize emin misiniz?\n\n• Tüm mesajlarınız silinecek\n• Tüm eşleşmeleriniz silinecek\n• Profil bilgileriniz silinecek\n\nBu işlem geri alınamaz!")
+            .setPositiveButton("Hesabı Sil") { _, _ ->
+                showFinalDeleteConfirmation()
+            }
+            .setNegativeButton("İptal", null)
+            .show()
+    }
+    
+    private fun showFinalDeleteConfirmation() {
+        AlertDialog.Builder(this)
+            .setTitle("Son Onay")
+            .setMessage("Hesabınız kalıcı olarak silinecek. Devam etmek istiyor musunuz?")
+            .setPositiveButton("Evet, Sil") { _, _ ->
+                deleteAccount()
+            }
+            .setNegativeButton("Vazgeç", null)
+            .show()
+    }
+    
+    private fun deleteAccount() {
+        val currentUser = authRepository.getCurrentUser()
+        if (currentUser == null) {
+            Toast.makeText(this, "Kullanıcı giriş yapmamış", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val userId = currentUser.uid
+                
+                // 1. Kullanıcının eşleşmelerini sil
+                val matches1 = firestore.collection("matches")
+                    .whereEqualTo("user1Id", userId)
+                    .get().await()
+                val matches2 = firestore.collection("matches")
+                    .whereEqualTo("user2Id", userId)
+                    .get().await()
+                
+                val allMatches = matches1.documents + matches2.documents
+                for (match in allMatches) {
+                    // Mesajları sil
+                    val messages = firestore.collection("messages")
+                        .whereEqualTo("matchId", match.id)
+                        .get().await()
+                    for (msg in messages.documents) {
+                        try { firestore.collection("messages").document(msg.id).delete().await() } catch (_: Exception) {}
+                    }
+                    // Match'i sil
+                    try { firestore.collection("matches").document(match.id).delete().await() } catch (_: Exception) {}
+                }
+                
+                // 2. Kullanıcı dokümanını sil
+                firestore.collection("users").document(userId).delete().await()
+                
+                // 3. Firebase Auth'dan sil
+                currentUser.delete().await()
+                
+                // 4. Local verileri temizle
+                userPreferences.clearUser()
+                
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@SettingsActivity, "Hesabınız silindi", Toast.LENGTH_SHORT).show()
+                    
+                    // Login sayfasına yönlendir
+                    val intent = Intent(this@SettingsActivity, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    finish()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@SettingsActivity,
+                        "Hesap silinirken hata: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // HAKKINDA AYARLARI
+    // ═══════════════════════════════════════════════════════════════════
+    private fun setupAboutSettings() {
+        // Versiyon
+        try {
+            val packageInfo = packageManager.getPackageInfo(packageName, 0)
+            binding.tvAppVersion.text = packageInfo.versionName
+        } catch (_: Exception) {
+            binding.tvAppVersion.text = "1.0.0"
+        }
+        
+        // Gizlilik Politikası
+        binding.cardPrivacyPolicy.setOnClickListener {
+            val intent = Intent(this, PolicyActivity::class.java)
+            intent.putExtra(PolicyActivity.EXTRA_POLICY_TYPE, PolicyActivity.TYPE_PRIVACY)
+            startActivity(intent)
+        }
+        
+        // Kullanım Koşulları
+        binding.cardTermsOfService.setOnClickListener {
+            val intent = Intent(this, PolicyActivity::class.java)
+            intent.putExtra(PolicyActivity.EXTRA_POLICY_TYPE, PolicyActivity.TYPE_TERMS)
+            startActivity(intent)
+        }
+        
+        // Destek
+        binding.cardSupport.setOnClickListener {
+            sendSupportEmail()
+        }
+    }
+    
+    private fun sendSupportEmail() {
+        try {
+            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf("risemateapp@gmail.com"))
+                putExtra(Intent.EXTRA_SUBJECT, "RiseMate Destek Talebi")
+                putExtra(Intent.EXTRA_TEXT, "\n\n---\nUygulama Versiyonu: ${binding.tvAppVersion.text}\nCihaz: ${android.os.Build.MODEL}\nAndroid: ${android.os.Build.VERSION.RELEASE}")
+            }
+            startActivity(Intent.createChooser(intent, "E-posta Gönder"))
+        } catch (e: Exception) {
+            Toast.makeText(this, "E-posta uygulaması bulunamadı", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        // Engellenenler listesinden döndüğünde sayıyı güncelle
+        updateBlockedCount()
+    }
+    
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+}

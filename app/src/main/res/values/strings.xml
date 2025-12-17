@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RiseMate</string>
+    <string name="default_web_client_id">591598885953-c5du3panp1raplvelccftab1cmgkijqa.apps.googleusercontent.com</string>
+    
+    <!-- Genel -->
+    <string name="loading">Yükleniyor...</string>
+    <string name="error">Hata</string>
+    <string name="success">Başarılı</string>
+    <string name="cancel">İptal</string>
+    <string name="save">Kaydet</string>
+    <string name="delete">Sil</string>
+    <string name="edit">Düzenle</string>
+    <string name="confirm">Onayla</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="ok">Tamam</string>
+    <string name="close">Kapat</string>
+    <string name="search">Ara</string>
+    <string name="send">Gönder</string>
+    <string name="back">Geri</string>
+    <string name="next">İleri</string>
+    <string name="done">Bitti</string>
+    <string name="retry">Tekrar Dene</string>
+    <string name="apply">Uygula</string>
+    <string name="clear">Temizle</string>
+    
+    <!-- Giriş / Kayıt -->
+    <string name="login">Giriş Yap</string>
+    <string name="register">Kayıt Ol</string>
+    <string name="logout">Çıkış Yap</string>
+    <string name="email">E-posta</string>
+    <string name="password">Şifre</string>
+    <string name="confirm_password">Şifreyi Onayla</string>
+    <string name="forgot_password">Şifremi Unuttum</string>
+    <string name="login_with_google">Google ile Giriş Yap</string>
+    <string name="dont_have_account">Hesabın yok mu?</string>
+    <string name="already_have_account">Zaten hesabın var mı?</string>
+    <string name="create_account">Hesap Oluştur</string>
+    <string name="welcome_back">Tekrar Hoş Geldin!</string>
+    <string name="login_to_continue">Devam etmek için giriş yap</string>
+    
+    <!-- Profil -->
+    <string name="profile">Profil</string>
+    <string name="edit_profile">Profili Düzenle</string>
+    <string name="my_profile">Profilim</string>
+    <string name="name">İsim</string>
+    <string name="full_name">Ad Soyad</string>
+    <string name="username">Kullanıcı Adı</string>
+    <string name="bio">Hakkımda</string>
+    <string name="age">Yaş</string>
+    <string name="city">Şehir</string>
+    <string name="birthday">Doğum Tarihi</string>
+    <string name="phone">Telefon</string>
+    <string name="followers">Takipçiler</string>
+    <string name="following">Takip Edilenler</string>
+    <string name="posts">Gönderiler</string>
+    <string name="follow">Takip Et</string>
+    <string name="unfollow">Takibi Bırak</string>
+    <string name="block_user">Engelle</string>
+    <string name="unblock_user">Engeli Kaldır</string>
+    <string name="report_user">Kullanıcıyı Şikayet Et</string>
+    <string name="user_blocked">Kullanıcı engellendi</string>
+    <string name="user_unblocked">Engel kaldırıldı</string>
+    <string name="profile_updated">Profil güncellendi</string>
+    
+    <!-- Yetenekler -->
+    <string name="skills">Yetenekler</string>
+    <string name="known_skills">Bildiğim Yetenekler</string>
+    <string name="wanted_skills">Öğrenmek İstediğim Yetenekler</string>
+    <string name="add_skill">Yetenek Ekle</string>
+    <string name="select_skills">Yetenek Seç</string>
+    <string name="skill_level">Seviye</string>
+    <string name="beginner">Başlangıç</string>
+    <string name="intermediate">Orta</string>
+    <string name="advanced">İleri</string>
+    <string name="expert">Uzman</string>
+    
+    <!-- Keşfet / Eşleşme -->
+    <string name="explore">Keşfet</string>
+    <string name="matching">Eşleşme</string>
+    <string name="find_matches">Eşleşme Bul</string>
+    <string name="no_matches">Eşleşme bulunamadı</string>
+    <string name="match_found">Eşleşme bulundu!</string>
+    <string name="send_match_request">Eşleşme İsteği Gönder</string>
+    <string name="match_request_sent">İstek gönderildi</string>
+    <string name="match_requests">Eşleşme İstekleri</string>
+    <string name="pending_requests">Bekleyen İstekler</string>
+    <string name="accept">Kabul Et</string>
+    <string name="reject">Reddet</string>
+    <string name="accepted">Kabul Edildi</string>
+    <string name="rejected">Reddedildi</string>
+    <string name="learn_together">Birlikte Öğrenelim</string>
+    <string name="learn_together_description">Sadece öğrenmek istediğiniz yeteneklere göre eşleşin</string>
+    
+    <!-- Filtre -->
+    <string name="filter">Filtre</string>
+    <string name="filters">Filtreler</string>
+    <string name="apply_filters">Filtreleri Uygula</string>
+    <string name="clear_filters">Temizle</string>
+    <string name="age_range">Yaş Aralığı</string>
+    <string name="find_in_my_city">Kendi şehrimdekileri bul</string>
+    <string name="all_cities">Tüm Şehirler</string>
+    <string name="filter_active">%d filtre aktif</string>
+    <string name="match_filters">🎯 Eşleşme Filtreleri</string>
+    <string name="find_people_easily">Aradığın kişileri daha kolay bul</string>
+    <string name="or_select_city">veya şehir seçin:</string>
+    <string name="select_city_hint">Şehir seçin</string>
+    <string name="all">Tümü</string>
+    <string name="learn_together_info">Bu modda, öğrenmek istediğiniz yeteneklerde ortak olanlarla eşleşirsiniz. Birlikte çalışarak öğrenebilirsiniz!</string>
+    <string name="match_same_interests">Aynı şeyleri öğrenmek isteyenlerle eşleş</string>
+    
+    <!-- Mesajlaşma -->
+    <string name="messages">Mesajlar</string>
+    <string name="chats">Sohbetler</string>
+    <string name="new_message">Yeni Mesaj</string>
+    <string name="type_message">Mesaj yaz...</string>
+    <string name="no_messages">Henüz mesaj yok</string>
+    <string name="message_sent">Mesaj gönderildi</string>
+    <string name="online">Çevrimiçi</string>
+    <string name="offline">Çevrimdışı</string>
+    <string name="last_seen">Son görülme: %s</string>
+    <string name="typing">yazıyor...</string>
+    
+    <!-- Arama -->
+    <string name="voice_call">Sesli Arama</string>
+    <string name="video_call">Görüntülü Arama</string>
+    <string name="incoming_call">Gelen Arama</string>
+    <string name="outgoing_call">Giden Arama</string>
+    <string name="call_ended">Arama sona erdi</string>
+    <string name="call_declined">Arama reddedildi</string>
+    <string name="call_missed">Cevapsız Arama</string>
+    <string name="calling">Aranıyor...</string>
+    <string name="call_duration">Süre: %s</string>
+    <string name="answer">Yanıtla</string>
+    <string name="decline">Reddet</string>
+    <string name="end_call">Aramayı Sonlandır</string>
+    <string name="mute">Sessiz</string>
+    <string name="unmute">Sesi Aç</string>
+    <string name="speaker">Hoparlör</string>
+    <string name="camera_on">Kamera Aç</string>
+    <string name="camera_off">Kamera Kapat</string>
+    <string name="switch_camera">Kamera Değiştir</string>
+    <string name="agora_not_configured">Agora App ID yapılandırılmamış</string>
+    
+    <!-- Sosyal -->
+    <string name="social">Sosyal</string>
+    <string name="feed">Akış</string>
+    <string name="create_post">Gönderi Oluştur</string>
+    <string name="whats_on_your_mind">Ne düşünüyorsun?</string>
+    <string name="share">Paylaş</string>
+    <string name="like">Beğen</string>
+    <string name="unlike">Beğenmekten Vazgeç</string>
+    <string name="comment">Yorum</string>
+    <string name="comments">Yorumlar</string>
+    <string name="add_comment">Yorum ekle...</string>
+    <string name="reply">Yanıtla</string>
+    <string name="replies">Yanıtlar</string>
+    <string name="view_replies">%d yanıtı görüntüle</string>
+    <string name="no_comments">Henüz yorum yok</string>
+    <string name="post_deleted">Gönderi silindi</string>
+    <string name="comment_added">Yorum eklendi</string>
+    <string name="original_post">Orijinal Gönderi</string>
+    <string name="more_options">Daha fazla</string>
+    <string name="read_more">Devamını gör…</string>
+    
+    <!-- Match Requests -->
+    <string name="time_remaining">%s kaldı</string>
+    <string name="waiting_status">⏳ Bekliyor</string>
+    <string name="reject_btn">✗ Reddet</string>
+    <string name="accept_btn">✓ Kabul Et</string>
+    <string name="connecting">Bağlanıyor…</string>
+    
+    <!-- Gruplar -->
+    <string name="groups">Gruplar</string>
+    <string name="my_groups">Gruplarım</string>
+    <string name="find_groups">Grup Bul</string>
+    <string name="create_group">Grup Oluştur</string>
+    <string name="join_group">Gruba Katıl</string>
+    <string name="leave_group">Gruptan Ayrıl</string>
+    <string name="group_members">Grup Üyeleri</string>
+    <string name="group_chat">Grup Sohbeti</string>
+    <string name="admin">Yönetici</string>
+    <string name="member">Üye</string>
+    <string name="members_count">%d Üye</string>
+    
+    <!-- Sorular -->
+    <string name="questions">Sorular</string>
+    <string name="ask_question">Soru Sor</string>
+    <string name="question_title">Soru Başlığı</string>
+    <string name="question_content">Soru İçeriği</string>
+    <string name="answers">Cevaplar</string>
+    <string name="add_answer">Cevap Ekle</string>
+    <string name="no_answers">Henüz cevap yok</string>
+    <string name="best_answer">En İyi Cevap</string>
+    
+    <!-- Bildirimler -->
+    <string name="notifications">Bildirimler</string>
+    <string name="notification_settings">Bildirim Ayarları</string>
+    <string name="enable_notifications">Bildirimleri Aç</string>
+    <string name="notification_sound">Bildirim Sesi</string>
+    <string name="notification_vibration">Bildirim Titreşimi</string>
+    <string name="all_notifications">Tüm bildirimleri aç veya kapat</string>
+    <string name="play_sound">Bildirimlerde ses çal</string>
+    <string name="use_vibration">Bildirimlerde titreşim kullan</string>
+    
+    <!-- Gizlilik -->
+    <string name="privacy">Gizlilik</string>
+    <string name="privacy_settings">Gizlilik Ayarları</string>
+    <string name="hide_online_status">Çevrimiçi Durumumu Gizle</string>
+    <string name="hide_online_status_desc">Diğerleri seni çevrimiçi göremez</string>
+    <string name="hide_last_seen">Son Görülmemi Gizle</string>
+    <string name="hide_last_seen_desc">Diğerleri son görülme zamanını göremez</string>
+    <string name="blocked_users">Engellenenler</string>
+    <string name="blocked_users_desc">Engellenen kullanıcıları yönet</string>
+    <string name="blocked_count">%d kişi engellendi</string>
+    
+    <!-- Hesap -->
+    <string name="account">Hesap</string>
+    <string name="account_settings">Hesap Ayarları</string>
+    <string name="delete_account">Hesabımı Sil</string>
+    <string name="delete_account_desc">Tüm verileriniz kalıcı olarak silinir</string>
+    <string name="delete_account_warning">Hesabınızı silmek istediğinize emin misiniz?\n\n• Tüm mesajlarınız silinecek\n• Tüm eşleşmeleriniz silinecek\n• Profil bilgileriniz silinecek\n\nBu işlem geri alınamaz!</string>
+    <string name="final_confirmation">Son Onay</string>
+    <string name="final_delete_message">Hesabınız kalıcı olarak silinecek. Devam etmek istiyor musunuz?</string>
+    <string name="yes_delete">Evet, Sil</string>
+    <string name="account_deleted">Hesabınız silindi</string>
+    <string name="delete_error">Hesap silinirken hata: %s</string>
+    <string name="user_not_logged_in">Kullanıcı giriş yapmamış</string>
+    
+    <!-- Ayarlar -->
+    <string name="settings">Ayarlar</string>
+    <string name="general_settings">Genel Ayarlar</string>
+    <string name="language">Dil</string>
+    <string name="language_desc">Uygulama dilini değiştir</string>
+    <string name="select_language">Dil Seç</string>
+    <string name="language_turkish">Türkçe</string>
+    <string name="language_english">English</string>
+    <string name="language_changed">Dil değiştirildi</string>
+    <string name="restart_required">Değişikliklerin uygulanması için uygulama yeniden başlatılacak</string>
+    
+    <!-- Hakkında -->
+    <string name="about">Hakkında</string>
+    <string name="app_version">Uygulama Versiyonu</string>
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="terms_of_service">Kullanım Koşulları</string>
+    <string name="support">Destek</string>
+    <string name="support_desc">Yardım veya geri bildirim için bize ulaşın</string>
+    <string name="support_email_subject">RiseMate Destek Talebi</string>
+    <string name="send_email">E-posta Gönder</string>
+    <string name="no_email_app">E-posta uygulaması bulunamadı</string>
+    
+    <!-- Şikayet -->
+    <string name="report">Şikayet Et</string>
+    <string name="report_reason">Şikayet Nedeni</string>
+    <string name="report_description">Açıklama (İsteğe Bağlı)</string>
+    <string name="report_submitted">Şikayet gönderildi</string>
+    <string name="block_after_report">Bu kullanıcıyı engellemek ister misiniz?</string>
+    <string name="report_spam">Spam</string>
+    <string name="report_harassment">Taciz / Zorbalık</string>
+    <string name="report_inappropriate">Uygunsuz İçerik</string>
+    <string name="report_fake">Sahte Profil</string>
+    <string name="report_other">Diğer</string>
+    <string name="reason_inappropriate">Uygunsuz içerik</string>
+    <string name="reason_fake_profile">Sahte profil</string>
+    <string name="reason_harassment">Taciz veya zorbalık</string>
+    <string name="reason_spam">Spam veya reklam</string>
+    <string name="reason_hate_speech">Nefret söylemi</string>
+    <string name="reason_fraud">Dolandırıcılık şüphesi</string>
+    <string name="reason_other">Diğer</string>
+    <string name="additional_description">Ek açıklama (isteğe bağlı)</string>
+    <string name="report_info">Şikayetiniz gizli tutulacak ve ekibimiz tarafından incelenecektir.</string>
+    <string name="submit_report">Şikayeti Gönder</string>
+    
+    <!-- Premium -->
+    <string name="premium">Premium</string>
+    <string name="upgrade_to_premium">Premium\'a Yükselt</string>
+    <string name="premium_features">Premium Özellikler</string>
+    <string name="already_premium">Zaten Premium üyesiniz</string>
+    
+    <!-- Quiz -->
+    <string name="quiz">Quiz</string>
+    <string name="skill_quiz">Yetenek Testi</string>
+    <string name="start_quiz">Teste Başla</string>
+    <string name="quiz_result">Test Sonucu</string>
+    <string name="score">Puan: %d/%d</string>
+    <string name="pass">Geçti</string>
+    <string name="fail">Kaldı</string>
+    
+    <!-- Liderlik Tablosu -->
+    <string name="leaderboard">Liderlik Tablosu</string>
+    <string name="rank">Sıra</string>
+    <string name="points">Puan</string>
+    <string name="top_users">En İyi Kullanıcılar</string>
+    
+    <!-- Hata Mesajları -->
+    <string name="error_occurred">Bir hata oluştu</string>
+    <string name="network_error">İnternet bağlantınızı kontrol edin</string>
+    <string name="invalid_email">Geçersiz e-posta adresi</string>
+    <string name="invalid_password">Şifre en az 6 karakter olmalı</string>
+    <string name="passwords_not_match">Şifreler eşleşmiyor</string>
+    <string name="field_required">Bu alan zorunludur</string>
+    <string name="user_not_found">Kullanıcı bulunamadı</string>
+    <string name="permission_denied">İzin reddedildi</string>
+    <string name="try_again">Lütfen tekrar deneyin</string>
+    
+    <!-- Zaman Formatları -->
+    <string name="just_now">Az önce</string>
+    <string name="minutes_ago">%d dakika önce</string>
+    <string name="hours_ago">%d saat önce</string>
+    <string name="days_ago">%d gün önce</string>
+    <string name="today">Bugün</string>
+    <string name="yesterday">Dün</string>
+    
+    <!-- Login Sayfası -->
+    <string name="app_subtitle">Yeteneklerini paylaş, yeni şeyler öğren!</string>
+    <string name="welcome_emoji">👋 Hoş Geldin!</string>
+    <string name="email_hint">📧 E-posta</string>
+    <string name="password_hint">🔒 Şifre</string>
+    <string name="or">veya</string>
+    
+    <!-- Drawer Menu -->
+    <string name="main_categories">Ana Kategoriler</string>
+    <string name="other">Diğer</string>
+    <string name="find_groups_premium">Grup Bul (Premium)</string>
+    <string name="qa">Soru-Cevap</string>
+    <string name="help">Yardım</string>
+    
+    <!-- Bottom Navigation -->
+    <string name="matches">Eşleşmeler</string>
+    <string name="chat">Sohbet</string>
+    
+    <!-- Profil Sayfası -->
+    <string name="info">Bilgiler</string>
+    <string name="personal_info">Kişisel Bilgiler</string>
+    <string name="known_skills_title">Bilinen Yetenekler</string>
+    <string name="wanted_skills_title">Öğrenmek İstediği Yetenekler</string>
+    <string name="no_skills">Yetenek eklenmemiş</string>
+    <string name="match_score">Eşleşme Skoru</string>
+    <string name="verified">Doğrulanmış</string>
+    <string name="you_can_teach">Öğretebilirsin</string>
+    <string name="you_can_learn">Öğrenebilirsin</string>
+    <string name="no_user_found">Kullanıcı bulunamadı</string>
+    <string name="message_user">Mesaj Gönder</string>
+    <string name="skill_verification">Yetenek Doğrulama</string>
+    <string name="verify_your_skills">Yeteneklerinizi quiz ile doğrulayın</string>
+    <string name="edit_skills">Yetenekleri Düzenle</string>
+    
+    <!-- Chat -->
+    <string name="no_chats">Henüz sohbet yok</string>
+    <string name="start_matching">Keşfet bölümünden eşleşme isteği gönderin!</string>
+    <string name="you">Sen</string>
+    <string name="photo">Fotoğraf</string>
+    <string name="image">Görsel</string>
+    <string name="select_image">Görsel Seç</string>
+    <string name="send_image">Gönder</string>
+    
+    <!-- Explore -->
+    <string name="no_users_found">Kullanıcı bulunamadı</string>
+    <string name="swipe_info">Sağa kaydırarak eşleşme isteği gönderin</string>
+    <string name="years_old">%d yaş</string>
+    
+    <!-- Matching -->
+    <string name="match_requests_title">Eşleşme İstekleri</string>
+    <string name="no_requests">Henüz eşleşme isteği yok</string>
+    <string name="request_accepted">İstek kabul edildi!</string>
+    <string name="request_rejected">İstek reddedildi</string>
+    <string name="send_request">İstek Gönder</string>
+    <string name="request_pending">Beklemede</string>
+    
+    <!-- Social -->
+    <string name="whats_happening">Neler oluyor?</string>
+    <string name="no_posts">Henüz gönderi yok</string>
+    <string name="post_content_hint">Ne düşünüyorsun?</string>
+    <string name="add_photo">Fotoğraf Ekle</string>
+    <string name="post_button">Paylaş</string>
+    <string name="delete_post">Gönderiyi Sil</string>
+    <string name="delete_post_confirm">Bu gönderiyi silmek istediğinize emin misiniz?</string>
+    
+    <!-- Comments -->
+    <string name="comment_count">%d Yorum</string>
+    <string name="write_comment">Yorum yaz...</string>
+    <string name="replying_to">%s kullanıcısına yanıt veriyorsun</string>
+    <string name="view_more_replies">%d yanıtı daha görüntüle</string>
+    <string name="liked">Beğenildi</string>
+    <string name="add_comment_title">Yorum Ekle</string>
+    <string name="comment_hint">Yorumunuzu yazın...</string>
+    <string name="tip">İpucu</string>
+    <string name="comment_tip">Saygılı ve yapıcı yorumlar yaparak topluluğumuza katkıda bulunun.</string>
+    
+    <!-- Groups -->
+    <string name="group_name">Grup Adı</string>
+    <string name="group_description">Grup Açıklaması</string>
+    <string name="skill_groups">Yetenek Grupları</string>
+    <string name="city_groups">Şehir Grupları</string>
+    <string name="project_groups">Proje Grupları</string>
+    <string name="no_groups">Henüz grup yok</string>
+    <string name="join">Katıl</string>
+    <string name="joined">Katıldın</string>
+    <string name="group_type_message">Mesaj yaz...</string>
+    
+    <!-- Questions / Forum -->
+    <string name="question_hint">Sorunuzu buraya yazın...</string>
+    <string name="ask">Sor</string>
+    <string name="answer_hint">Cevabınızı yazın...</string>
+    <string name="answer_button">Cevapla</string>
+    <string name="no_questions">Henüz soru yok</string>
+    <string name="mark_best">En İyi Olarak İşaretle</string>
+    <string name="delete_question">Soruyu Sil</string>
+    
+    <!-- Blocked Users -->
+    <string name="blocked_users_title">Engellenen Kullanıcılar</string>
+    <string name="no_blocked_users">Engellenen kullanıcı yok</string>
+    <string name="unblock">Engeli Kaldır</string>
+    
+    <!-- Filter -->
+    <string name="filter_title">Filtrele</string>
+    <string name="age_filter">Yaş Filtresi</string>
+    <string name="any_age">Tüm Yaşlar</string>
+    
+    <!-- Followers/Following -->
+    <string name="followers_title">Takipçiler</string>
+    <string name="following_title">Takip Edilenler</string>
+    <string name="no_followers">Henüz takipçi yok</string>
+    <string name="no_following">Henüz takip edilen yok</string>
+    
+    <!-- Premium -->
+    <string name="premium_title">Premium Üyelik</string>
+    <string name="premium_subtitle">Tüm özelliklerin kilidini aç!</string>
+    <string name="unlimited_matches">Sınırsız Eşleşme</string>
+    <string name="unlimited_matches_desc">İstediğin kadar eşleşme isteği gönder</string>
+    <string name="see_who_likes">Beğenenleri Gör</string>
+    <string name="see_who_likes_desc">Seni kimlerin beğendiğini gör</string>
+    <string name="ad_free">Reklamsız Deneyim</string>
+    <string name="ad_free_desc">Hiçbir reklam görme</string>
+    <string name="premium_badge">Premium Rozet</string>
+    <string name="premium_badge_desc">Profilinde özel rozet</string>
+    <string name="get_premium">Premium Ol</string>
+    <string name="restore_purchase">Satın Alımı Geri Yükle</string>
+    
+    <!-- Leaderboard -->
+    <string name="leaderboard_title">Liderlik Tablosu</string>
+    <string name="weekly">Haftalık</string>
+    <string name="monthly">Aylık</string>
+    <string name="all_time">Tüm Zamanlar</string>
+    
+    <!-- Quiz -->
+    <string name="quiz_title">Yetenek Testi</string>
+    <string name="question_number">Soru %d/%d</string>
+    <string name="quiz_time_remaining">Kalan Süre: %d</string>
+    <string name="congratulations">Tebrikler!</string>
+    <string name="quiz_passed">Testi geçtiniz!</string>
+    <string name="quiz_failed">Testi geçemediniz</string>
+    <string name="your_score">Puanınız: %d%%</string>
+    <string name="retry_quiz">Tekrar Dene</string>
+    <string name="back_to_profile">Profile Dön</string>
+    
+    <!-- Register Flow -->
+    <string name="step">Adım %d/%d</string>
+    <string name="enter_email">E-posta adresinizi girin</string>
+    <string name="enter_password">Şifrenizi oluşturun</string>
+    <string name="enter_name">Adınızı girin</string>
+    <string name="select_birthday">Doğum tarihinizi seçin</string>
+    <string name="select_city">Şehrinizi seçin</string>
+    <string name="select_known_skills">Bildiğiniz yetenekleri seçin</string>
+    <string name="select_wanted_skills">Öğrenmek istediğiniz yetenekleri seçin</string>
+    <string name="complete_registration">Kaydı Tamamla</string>
+    <string name="skip">Atla</string>
+    
+    <!-- Edit Profile -->
+    <string name="edit_name">İsim Düzenle</string>
+    <string name="edit_bio">Hakkımda Düzenle</string>
+    <string name="edit_city">Şehir Düzenle</string>
+    <string name="change_photo">Fotoğraf Değiştir</string>
+    <string name="save_changes">Değişiklikleri Kaydet</string>
+    <string name="ringing">Çalıyor...</string>
+    <string name="call_in_progress">Görüşme devam ediyor</string>
+    
+    <!-- Report Reasons -->
+    <string name="select_reason">Sebep seçin</string>
+    <string name="describe_issue">Sorunu açıklayın (isteğe bağlı)</string>
+    <string name="send_report">Şikayeti Gönder</string>
+    
+    <!-- Profile Page Extra -->
+    <string name="user_name_placeholder">Kullanıcı Adı</string>
+    <string name="username_placeholder">\@kullanici</string>
+    <string name="no_matches_yet">Henüz eşleşecek kullanıcı bulunmuyor</string>
+    <string name="update_profile_try_again">Profilini güncelleyip tekrar dene.</string>
+    <string name="no_messages_yet">Henüz mesajın yok</string>
+    <string name="swipe_right_to_match">Keşfet\'te sağa kaydırarak\neşleşme isteği gönder!</string>
+    <string name="edit_profile_btn">✏️  Profili Düzenle</string>
+    <string name="verify_skills_btn">✅  Yeteneklerimi Doğrula</string>
+    <string name="follow_btn">➕  Takip Et</string>
+    <string name="unfollow_btn">➖  Takibi Bırak</string>
+    <string name="report_user_btn">⚠️  Kullanıcıyı Şikayet Et</string>
+    <string name="block_user_btn">🚫  Kullanıcıyı Engelle</string>
+    <string name="unblock_user_btn">✓  Engeli Kaldır</string>
+    <string name="logout_btn">🚪  Çıkış Yap</string>
+    <string name="explore_btn">🔍 Keşfet</string>
+    <string name="their_skills">Bildikleri</string>
+    <string name="wants_to_learn">Öğrenmek İstediği</string>
+    <string name="tap_to_see_profile">Profilini görmek için dokun</string>
+    <string name="pending">⏳ Bekleyen</string>
+    <string name="accepted_emoji">✅ Kabul</string>
+    <string name="no_requests_yet">Henüz istek yok</string>
+    <string name="incoming_requests">📥 Gelen İstekler</string>
+    <string name="people_who_like_you">Seni beğenen kişiler burada!</string>
+    
+    <!-- Misc -->
+    <string name="skill">Rise</string>
+    <string name="match_word">Mate</string>
+    <string name="menu">Menü</string>
+    <string name="notifications_emoji">🔔</string>
+    <string name="privacy_emoji">👁️</string>
+    <string name="account_emoji">⚙️</string>
+    <string name="about_emoji">ℹ️</string>
+    <string name="blocked_emoji">🚫</string>
+    <string name="delete_emoji">🗑️</string>
+    <string name="support_emoji">💬</string>
+    <string name="document_emoji">📄</string>
+    <string name="list_emoji">📋</string>
+</resources>

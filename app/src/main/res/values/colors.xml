@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Temel renkler -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Mor tema renkleri -->
+    <color name="primary_color">#FF6200EE</color>
+    <color name="primary_color_dark">#FF3700B3</color>
+    <color name="primary_color_light">#FF7C4DFF</color>
+    <color name="primary_dark">#FF3700B3</color>
+    
+    <!-- Secondary renkler - mor paletine uygun -->
+    <color name="secondary_color">#FF9C27B0</color>
+    <color name="secondary_dark">#FF7B1FA2</color>
+    
+    <!-- Tertiary renkler - mor paletine uygun -->
+    <color name="tertiary_color">#FFAB47BC</color>
+    
+    <!-- Surface renkleri -->
+    <color name="surface_variant">#FFF3E5F5</color>
+    <color name="on_surface_variant">#FF6A1B9A</color>
+    
+    <!-- Hata ve başarı renkleri -->
+    <color name="error_color">#FFE91E63</color>
+    <color name="success_color">#FF4CAF50</color>
+    
+    <!-- Eski renkler (geriye dönük uyumluluk için) -->
+    <color name="accent_color">#FF9C27B0</color>
+    <color name="teal_700">#FF9C27B0</color>
+    <color name="light_gray">#FFF5F5F5</color>
+    <color name="red_500">#FFE91E63</color>
+    <color name="green_500">#FF4CAF50</color>
+    
+    <!-- Skill chip renkleri -->
+    <color name="skill_known_text">#2E7D32</color>
+    <color name="skill_wanted_text">#E65100</color>
+    <color name="skill_known_bg">#E8F5E9</color>
+    <color name="skill_wanted_bg">#FFF3E0</color>
+    
+    <!-- Aksan renkleri (Mor + Sarı/Altın paleti) -->
+    <color name="gold_accent">#FFD54F</color>
+    <color name="gold_light">#FFECB3</color>
+    <color name="gold_dark">#FFC107</color>
+    
+    <!-- Mor ile uyumlu aksan renkleri -->
+    <color name="cyan_accent">#22D3EE</color>
+    <color name="mint_accent">#34D399</color>
+    
+    <!-- Premium aksan renkleri -->
+    <color name="champagne">#DCC7AA</color>
+    <color name="cream">#F5E6D3</color>
+
+    <!-- UI renkleri -->
+    <color name="background">#FAFAFA</color>
+    <color name="background_color">#FAFAFA</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#9E9E9E</color>
+    <color name="divider_color">#E0E0E0</color>
+    <color name="primary_light">#EDE7F6</color>
+    
+    <!-- Comment UI renkleri -->
+    <color name="comment_bubble_background">#F5F5F5</color>
+    <color name="comment_liked">#E91E63</color>
+    
+    <!-- Alpha renkler (Call UI için) -->
+    <color name="white_alpha_80">#CCFFFFFF</color>
+    <color name="white_alpha_20">#33FFFFFF</color>
+    <color name="black_alpha_50">#80000000</color>
+    
+    <!-- Tip Card renkleri -->
+    <color name="tip_background_color">#E3F2FD</color>
+    <color name="tip_border_color">#90CAF9</color>
+    <color name="tip_icon_color">#1976D2</color>
+    <color name="tip_text_color">#0D47A1</color>
+</resources>

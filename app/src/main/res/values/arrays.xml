@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default age range for RangeSlider -->
+    <array name="default_age_range">
+        <item>18</item>
+        <item>65</item>
+    </array>
+</resources>
+

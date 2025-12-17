@@ -1,0 +1,379 @@
+package com.parthenios.risemate.ui.auth
+
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.parthenios.risemate.R
+import com.parthenios.risemate.auth.AuthRepository
+import com.parthenios.risemate.databinding.ActivityLoginBinding
+import com.parthenios.risemate.MainActivity
+import com.parthenios.risemate.utils.LocaleHelper
+import com.parthenios.risemate.utils.UserPreferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.firestore.FirebaseFirestore
+
+class LoginActivity : AppCompatActivity() {
+    
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.updateBaseContextLocale(newBase))
+    }
+    private lateinit var binding: ActivityLoginBinding
+    private lateinit var authRepository: AuthRepository
+    private lateinit var userPreferences: UserPreferences
+    private lateinit var googleSignInClient: GoogleSignInClient
+
+    companion object {
+        private const val RC_SIGN_IN = 9001
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        authRepository = AuthRepository()
+        userPreferences = UserPreferences(this)
+
+        // Google Sign-In konfigürasyonu
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .requestProfile()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        
+        // Her zaman hesap seçme ekranı açılması için mevcut oturumu kapat
+        googleSignInClient.signOut()
+
+        setupClickListeners()
+        checkCurrentUser()
+    }
+
+    private fun setupClickListeners() {
+        binding.btnLogin.setOnClickListener {
+            loginWithEmail()
+        }
+
+        binding.btnGoogleSignIn.setOnClickListener {
+            signInWithGoogle()
+        }
+
+        binding.tvSignUp.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            intent.putExtra("isNewRegistration", true)
+            startActivity(intent)
+        }
+    }
+
+    private fun checkCurrentUser() {
+        val currentUser = authRepository.getCurrentUser()
+        if (currentUser != null) {
+            // Kullanıcı Firebase'de var, Firestore'da profil kontrolü yap
+            checkUserProfileCompleteness(currentUser.uid)
+        }
+    }
+    
+    private fun checkUserProfileCompleteness(uid: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val result = authRepository.getUserFromFirestore(uid)
+                withContext(Dispatchers.Main) {
+                    if (result.isSuccess) {
+                        val user = result.getOrNull()
+                        if (user != null && user.firstName.isNotEmpty()) {
+                            // Önce mevcut kullanıcıyı al (eğer varsa)
+                            val previousUser = userPreferences.getUser()
+                            val previousUid = previousUser?.uid
+                            
+                            // Profil tamamlanmış, kullanıcı bilgilerini lokalde sakla
+                            userPreferences.saveUser(user)
+                            
+                            // Önceki kullanıcının durumunu çevrimdışı yap (eğer varsa ve farklıysa)
+                            if (previousUid != null && previousUid != uid) {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    try {
+                                        FirebaseFirestore.getInstance()
+                                            .collection("users")
+                                            .document(previousUid)
+                                            .update(mapOf(
+                                                "isOnline" to false,
+                                                "lastSeen" to System.currentTimeMillis()
+                                            ))
+                                            .await()
+                                    } catch (e: Exception) { }
+                                }
+                            }
+                            
+                            // Yeni kullanıcıyı çevrimiçi yap
+                            CoroutineScope(Dispatchers.IO).launch {
+                                try {
+                                    FirebaseFirestore.getInstance()
+                                        .collection("users")
+                                        .document(uid)
+                                        .update(mapOf(
+                                            "isOnline" to true,
+                                            "lastSeen" to System.currentTimeMillis()
+                                        ))
+                                        .await()
+                                } catch (e: Exception) { }
+                            }
+                            
+                            // FCM token'ını kaydet
+                            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    val token = task.result
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        try {
+                                            FirebaseFirestore.getInstance()
+                                                .collection("users")
+                                                .document(uid)
+                                                .update(mapOf("fcmToken" to token))
+                                                .await()
+                                        } catch (e: Exception) { }
+                                    }
+                                }
+                            }
+                            // Silinmiş kullanıcılarla ilişkili eski eşleşmeleri/mesajları temizle
+                            CoroutineScope(Dispatchers.IO).launch {
+                                try {
+                                    cleanupDanglingMatches(uid)
+                                } catch (_: Exception) {}
+                            }
+
+                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                            finish()
+                        } else {
+                            // Profil eksik, kayıt sayfasına yönlendir
+                            Toast.makeText(this@LoginActivity, "Profil bilgilerinizi tamamlayın", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+                            finish()
+                        }
+                    } else {
+                        // Firestore'da kullanıcı yok, kullanıcıyı Firebase'den sil ve giriş ekranında bırak
+                        deleteIncompleteUser(uid)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    // Hata durumunda kullanıcıyı Firebase'den sil ve giriş ekranında bırak
+                    deleteIncompleteUser(uid)
+                }
+            }
+        }
+    }
+
+    private fun deleteIncompleteUser(uid: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Kullanıcıyı Firebase Authentication'dan sil
+                val currentUser = authRepository.getCurrentUser()
+                if (currentUser != null) {
+                    currentUser.delete().await()
+                }
+                
+                withContext(Dispatchers.Main) {
+                    // Giriş ekranında kal, kullanıcı tekrar giriş yapabilir
+                    Toast.makeText(this@LoginActivity, "Eksik profil temizlendi, tekrar giriş yapabilirsiniz", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    // Silme başarısız olursa sadece çıkış yap
+                    authRepository.signOut()
+                    Toast.makeText(this@LoginActivity, "Profil temizlendi, tekrar giriş yapabilirsiniz", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private suspend fun cleanupDanglingMatches(currentUid: String) {
+        val db = FirebaseFirestore.getInstance()
+        // Kullanıcı profilinin oluşturulma zamanını al
+        val meDoc = db.collection("users").document(currentUid).get().await()
+        val myCreatedAt = meDoc.getLong("createdAt") ?: System.currentTimeMillis()
+        // Kullanıcının dahil olduğu tüm eşleşmeleri bul
+        val matches1 = db.collection("matches").whereEqualTo("user1Id", currentUid).get().await()
+        val matches2 = db.collection("matches").whereEqualTo("user2Id", currentUid).get().await()
+        val all = matches1.documents + matches2.documents
+        for (m in all) {
+            val user1Id = m.getString("user1Id")
+            val user2Id = m.getString("user2Id")
+            val otherId = if (user1Id == currentUid) user2Id else user1Id
+            if (otherId.isNullOrEmpty()) continue
+            val otherDoc = try { db.collection("users").document(otherId).get().await() } catch (e: Exception) { null }
+            val matchCreatedAt = m.getDate("createdAt")?.time ?: 0L
+            val shouldDeleteBecauseOtherMissing = (otherDoc == null || !otherDoc.exists())
+            val shouldDeleteBecauseStaleForMe = matchCreatedAt > 0 && myCreatedAt > matchCreatedAt
+            if (shouldDeleteBecauseOtherMissing || shouldDeleteBecauseStaleForMe) {
+                // Mesajları sil
+                val msgs = db.collection("messages").whereEqualTo("matchId", m.id).get().await()
+                for (d in msgs.documents) {
+                    try { db.collection("messages").document(d.id).delete().await() } catch (_: Exception) {}
+                }
+                // Eşleşmeyi sil
+                try { db.collection("matches").document(m.id).delete().await() } catch (_: Exception) {}
+            }
+        }
+        // Bu kullanıcının gönderdiği ya da aldığı ve karşı kullanıcı silinmiş olan istekleri temizle
+        val sent = db.collection("matchRequests").whereEqualTo("fromUserId", currentUid).get().await()
+        val received = db.collection("matchRequests").whereEqualTo("toUserId", currentUid).get().await()
+        val reqs = sent.documents + received.documents
+        for (r in reqs) {
+            val fromId = r.getString("fromUserId")
+            val toId = r.getString("toUserId")
+            val otherId = if (fromId == currentUid) toId else fromId
+            if (otherId.isNullOrEmpty()) continue
+            val otherDoc = try { db.collection("users").document(otherId).get().await() } catch (e: Exception) { null }
+            if (otherDoc == null || !otherDoc.exists()) {
+                try { db.collection("matchRequests").document(r.id).delete().await() } catch (_: Exception) {}
+            }
+        }
+    }
+
+    private fun loginWithEmail() {
+        val email = binding.etEmail.text.toString().trim()
+        val password = binding.etPassword.text.toString().trim()
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Lütfen tüm alanları doldurun", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        showLoading(true)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = authRepository.signInWithEmail(email, password)
+            withContext(Dispatchers.Main) {
+                showLoading(false)
+                if (result.isSuccess) {
+                    // Kullanıcı bilgilerini Firestore'dan al ve lokalde sakla
+                    val currentUser = authRepository.getCurrentUser()
+                    if (currentUser != null) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                val userResult = authRepository.getUserFromFirestore(currentUser.uid)
+                                withContext(Dispatchers.Main) {
+                                    if (userResult.isSuccess) {
+                                        val user = userResult.getOrNull()
+                                        user?.let { userPreferences.saveUser(it) }
+                                    }
+                                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                    finish()
+                                }
+                            } catch (e: Exception) {
+                                withContext(Dispatchers.Main) {
+                                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                    finish()
+                                }
+                            }
+                        }
+                    } else {
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        finish()
+                    }
+                } else {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Giriş başarısız: ${result.exceptionOrNull()?.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun signInWithGoogle() {
+        // Her zaman hesap seçme ekranı açılması için
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.let { signInWithGoogleAccount(it) }
+            } catch (e: ApiException) {
+                Toast.makeText(this, "Google girişi başarısız: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun signInWithGoogleAccount(account: com.google.android.gms.auth.api.signin.GoogleSignInAccount) {
+        showLoading(true)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = authRepository.signInWithGoogle(account)
+            withContext(Dispatchers.Main) {
+                showLoading(false)
+                if (result.isSuccess) {
+                    val user = result.getOrNull()
+                    if (user != null) {
+                        // Kullanıcı veritabanında var mı kontrol et
+                        checkGoogleUserProfile(user.uid)
+                    }
+                } else {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Google girişi başarısız: ${result.exceptionOrNull()?.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun checkGoogleUserProfile(uid: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val result = authRepository.getUserFromFirestore(uid)
+                withContext(Dispatchers.Main) {
+                    if (result.isSuccess) {
+                        val user = result.getOrNull()
+                        if (user != null && user.firstName.isNotEmpty()) {
+                            // Kullanıcı tam kayıtlı, kullanıcı bilgilerini lokalde sakla
+                            userPreferences.saveUser(user)
+                            Toast.makeText(this@LoginActivity, "Giriş başarılı!", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                            finish()
+                        } else {
+                            // Kullanıcı eksik bilgileri var, kayıt sayfasına git
+                            Toast.makeText(this@LoginActivity, "Lütfen profil bilgilerinizi tamamlayın", Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+                            finish()
+                        }
+                    } else {
+                        // Hata durumunda kayıt sayfasına git
+                        Toast.makeText(this@LoginActivity, "Lütfen profil bilgilerinizi tamamlayın", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
+                        finish()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@LoginActivity, "Bir hata oluştu: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun showLoading(show: Boolean) {
+        binding.progressBar.visibility = if (show) android.view.View.VISIBLE else android.view.View.GONE
+        binding.btnLogin.isEnabled = !show
+        binding.btnGoogleSignIn.isEnabled = !show
+    }
+}

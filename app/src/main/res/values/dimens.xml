@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="toolbar_nav_inset">20dp</dimen>
+    <dimen name="toolbar_nav_padding">8dp</dimen>
+    <dimen name="toolbar_min_height">56dp</dimen>
+    <dimen name="bottom_nav_margin_base">0dp</dimen>
+    
+    <!-- Explore Filter -->
+    <dimen name="explore_top_padding">72dp</dimen>
+    <dimen name="explore_top_padding_with_filter">120dp</dimen>
+    <dimen name="stroke_width_1dp">1dp</dimen>
+</resources>
+

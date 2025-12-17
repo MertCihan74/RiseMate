@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/main_categories">
+        <menu>
+            <item
+                android:id="@+id/nav_dating"
+                android:icon="@drawable/ic_explore"
+                android:title="@string/matching"
+                android:checkable="false" />
+
+            <item
+                android:id="@+id/nav_social"
+                android:icon="@drawable/ic_feed"
+                android:title="@string/social"
+                android:checkable="false" />
+
+            <item
+                android:id="@+id/nav_groups"
+                android:icon="@drawable/ic_group"
+                android:title="@string/find_groups_premium"
+                android:checkable="false" />
+
+            <item
+                android:id="@+id/nav_forum"
+                android:icon="@drawable/ic_forum"
+                android:title="@string/qa"
+                android:checkable="false" />
+
+            <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/ic_profile"
+                android:title="@string/profile"
+                android:checkable="false" />
+        </menu>
+    </item>
+    
+    <item android:title="@string/other">
+        <menu>
+            <item
+                android:id="@+id/nav_notifications"
+                android:icon="@drawable/ic_notification"
+                android:title="@string/notification_settings"
+                android:checkable="false" />
+            
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings"
+                android:title="@string/settings"
+                android:checkable="false" />
+            
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_help"
+                android:title="@string/help"
+                android:checkable="false" />
+            
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/logout"
+                android:checkable="false" />
+        </menu>
+    </item>
+    
+</menu>
