@@ -339,10 +339,13 @@ cd RiseMate
 2. **Firebase kurulumu:**
    - [Firebase Console](https://console.firebase.google.com)'da yeni proje oluşturun
    - Android uygulaması ekleyin (paket adı: `com.parthenios.risemate`)
-   - `google-services.json` dosyasını `app/` klasörüne ekleyin
+   - `google-services.json` dosyasını Firebase Console'dan indirin
+   - `app/google-services.json.example` dosyasını referans alarak `app/google-services.json` olarak kaydedin
    - Authentication'da Email/Password ve Google Sign-In'i etkinleştirin
    - Firestore Database oluşturun
    - Storage'ı etkinleştirin (profil fotoğrafları için)
+   
+   > ⚠️ **Not:** `google-services.json` dosyası güvenlik nedeniyle repoya dahil edilmemiştir. Kendi Firebase projenizden indirmeniz gerekmektedir.
 
 3. **Projeyi açın ve çalıştırın:**
 ```bash

@@ -1,5 +1,8 @@
 *.iml
 .gradle
+
+# Firebase config (contains API keys)
+app/google-services.json
 /local.properties
 /.idea/caches
 /.idea/libraries
