@@ -24,7 +24,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
-    
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.updateBaseContextLocale(newBase))
     }
@@ -53,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
-        
+
         // Her zaman hesap seçme ekranı açılması için mevcut oturumu kapat
         googleSignInClient.signOut()
 
@@ -84,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
             checkUserProfileCompleteness(currentUser.uid)
         }
     }
-    
+
     private fun checkUserProfileCompleteness(uid: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -96,10 +96,10 @@ class LoginActivity : AppCompatActivity() {
                             // Önce mevcut kullanıcıyı al (eğer varsa)
                             val previousUser = userPreferences.getUser()
                             val previousUid = previousUser?.uid
-                            
+
                             // Profil tamamlanmış, kullanıcı bilgilerini lokalde sakla
                             userPreferences.saveUser(user)
-                            
+
                             // Önceki kullanıcının durumunu çevrimdışı yap (eğer varsa ve farklıysa)
                             if (previousUid != null && previousUid != uid) {
                                 CoroutineScope(Dispatchers.IO).launch {
@@ -115,7 +115,7 @@ class LoginActivity : AppCompatActivity() {
                                     } catch (e: Exception) { }
                                 }
                             }
-                            
+
                             // Yeni kullanıcıyı çevrimiçi yap
                             CoroutineScope(Dispatchers.IO).launch {
                                 try {
@@ -129,7 +129,7 @@ class LoginActivity : AppCompatActivity() {
                                         .await()
                                 } catch (e: Exception) { }
                             }
-                            
+
                             // FCM token'ını kaydet
                             FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
@@ -155,10 +155,13 @@ class LoginActivity : AppCompatActivity() {
                             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                             finish()
                         } else {
-                            // Profil eksik, kayıt sayfasına yönlendir
-                            Toast.makeText(this@LoginActivity, "Profil bilgilerinizi tamamlayın", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
-                            finish()
+                            // Profil eksik - Firebase Auth'tan çıkış yap ve giriş ekranında bırak
+                            // Kullanıcı tekrar Google ile giriş yaparsa kayıt sayfasına yönlendirilecek
+                            authRepository.signOut()
+                            googleSignInClient.revokeAccess().addOnCompleteListener {
+                                googleSignInClient.signOut()
+                            }
+                            // Giriş ekranında kal, kullanıcı isterse tekrar giriş yapabilir
                         }
                     } else {
                         // Firestore'da kullanıcı yok, kullanıcıyı Firebase'den sil ve giriş ekranında bırak
@@ -182,7 +185,7 @@ class LoginActivity : AppCompatActivity() {
                 if (currentUser != null) {
                     currentUser.delete().await()
                 }
-                
+
                 withContext(Dispatchers.Main) {
                     // Giriş ekranında kal, kullanıcı tekrar giriş yapabilir
                     Toast.makeText(this@LoginActivity, "Eksik profil temizlendi, tekrar giriş yapabilirsiniz", Toast.LENGTH_SHORT).show()
@@ -294,9 +297,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signInWithGoogle() {
-        // Her zaman hesap seçme ekranı açılması için
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        // Her zaman hesap seçme ekranı açılması için önce çıkış yap
+        googleSignInClient.signOut().addOnCompleteListener {
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -308,6 +313,12 @@ class LoginActivity : AppCompatActivity() {
                 val account = task.getResult(ApiException::class.java)
                 account?.let { signInWithGoogleAccount(it) }
             } catch (e: ApiException) {
+                // Kullanıcı iptal ettiyse (12501) sessizce geri dön
+                if (e.statusCode == 12501) {
+                    // Kullanıcı iptal etti, herhangi bir işlem yapma
+                    return
+                }
+                // Diğer hatalar için mesaj göster
                 Toast.makeText(this, "Google girişi başarısız: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
@@ -327,6 +338,11 @@ class LoginActivity : AppCompatActivity() {
                         checkGoogleUserProfile(user.uid)
                     }
                 } else {
+                    // Başarısız olursa Firebase Auth'tan çıkış yap ve hesap seçimini sıfırla
+                    authRepository.signOut()
+                    googleSignInClient.revokeAccess().addOnCompleteListener {
+                        googleSignInClient.signOut()
+                    }
                     Toast.makeText(
                         this@LoginActivity,
                         "Google girişi başarısız: ${result.exceptionOrNull()?.message}",
@@ -352,19 +368,25 @@ class LoginActivity : AppCompatActivity() {
                             finish()
                         } else {
                             // Kullanıcı eksik bilgileri var, kayıt sayfasına git
-                            Toast.makeText(this@LoginActivity, "Lütfen profil bilgilerinizi tamamlayın", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
-                            finish()
+                            // finish() çağrılmıyor ki kullanıcı geri dönebilsin
+                            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+                            intent.putExtra("isGoogleSignUp", true)
+                            startActivity(intent)
                         }
                     } else {
-                        // Hata durumunda kayıt sayfasına git
-                        Toast.makeText(this@LoginActivity, "Lütfen profil bilgilerinizi tamamlayın", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
-                        finish()
+                        // Firestore'da kullanıcı yok, yeni kullanıcı - kayıt sayfasına git
+                        val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+                        intent.putExtra("isGoogleSignUp", true)
+                        startActivity(intent)
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
+                    // Hata durumunda Firebase Auth'tan çıkış yap ve hesap seçimini sıfırla
+                    authRepository.signOut()
+                    googleSignInClient.revokeAccess().addOnCompleteListener {
+                        googleSignInClient.signOut()
+                    }
                     Toast.makeText(this@LoginActivity, "Bir hata oluştu: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }

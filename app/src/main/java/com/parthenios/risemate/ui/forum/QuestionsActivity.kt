@@ -148,6 +148,8 @@ class QuestionsActivity : AppCompatActivity() {
     }
 
     private fun checkPremiumAndOpenGroups() {
+        // TEST VERSION: Premium kontrolü kaldırıldı, doğrudan grup sayfası açılıyor
+        /*
         lifecycleScope.launch {
             val isPremium = PremiumManager.isPremium(this@QuestionsActivity)
             if (isPremium) {
@@ -157,6 +159,11 @@ class QuestionsActivity : AppCompatActivity() {
                 startActivity(Intent(this@QuestionsActivity, PremiumActivity::class.java))
             }
         }
+        */
+
+        // Doğrudan grup sayfası aç
+        startActivity(Intent(this@QuestionsActivity, GroupActivity::class.java))
+        finish()
     }
 
     private fun performLogout() {

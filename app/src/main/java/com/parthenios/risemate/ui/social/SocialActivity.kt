@@ -201,6 +201,8 @@ class SocialActivity : AppCompatActivity() {
     }
 
     private fun checkPremiumAndOpenGroups() {
+        // TEST VERSION: Premium kontrolü kaldırıldı, doğrudan grup sayfası açılıyor
+        /*
         lifecycleScope.launch {
             val isPremium = PremiumManager.isPremium(this@SocialActivity)
             if (isPremium) {
@@ -210,6 +212,11 @@ class SocialActivity : AppCompatActivity() {
                 startActivity(Intent(this@SocialActivity, PremiumActivity::class.java))
             }
         }
+        */
+
+        // Doğrudan grup sayfası aç
+        startActivity(Intent(this@SocialActivity, com.parthenios.risemate.ui.group.GroupActivity::class.java))
+        finish()
     }
 
     override fun onBackPressed() {

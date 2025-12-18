@@ -322,7 +322,7 @@
     <!-- Drawer Menu -->
     <string name="main_categories">Ana Kategoriler</string>
     <string name="other">Diğer</string>
-    <string name="find_groups_premium">Grup Bul (Premium)</string>
+    <string name="find_groups_premium">Grup Bul</string>
     <string name="qa">Soru-Cevap</string>
     <string name="help">Yardım</string>
     

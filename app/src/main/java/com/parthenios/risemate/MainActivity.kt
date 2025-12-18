@@ -486,6 +486,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPremiumAndOpenGroups() {
+        // TEST VERSION: Premium kontrolü kaldırıldı, doğrudan grup sayfası açılıyor
+        /*
         lifecycleScope.launch {
             val isPremium = PremiumManager.isPremium(this@MainActivity)
             if (isPremium) {
@@ -496,6 +498,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this@MainActivity, PremiumActivity::class.java))
             }
         }
+        */
+
+        // Doğrudan grup sayfası aç
+        startActivity(Intent(this@MainActivity, com.parthenios.risemate.ui.group.GroupActivity::class.java))
     }
 
     private fun performLogout() {
@@ -567,4 +573,6 @@ class MainActivity : AppCompatActivity() {
         onlineStatusJob?.cancel()
         isNavigating = false
     }
+
+
 }
